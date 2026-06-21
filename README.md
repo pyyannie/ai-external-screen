@@ -20,6 +20,37 @@ When Claude is working, the screen shows exactly what it's doing. When Claude is
 | Permission needed | `ASK!` | Magenta |
 | Claude done | Robot face + `DONE` | Orange |
 
+### Screenshots
+
+<p float="left">
+  <img src="docs/screen_copy.jpg" width="180"/>
+  <img src="docs/screen_thinking.jpg" width="180"/>
+  <img src="docs/screen_read.jpg" width="180"/>
+  <img src="docs/screen_ask.jpg" width="180"/>
+</p>
+
+### Rest mode (when Claude is idle)
+
+<p float="left">
+  <img src="docs/screen_clock.jpg" width="180"/>
+  <img src="docs/screen_weather.jpg" width="180"/>
+  <img src="docs/screen_quote.jpg" width="180"/>
+</p>
+
+---
+
+## What it shows
+
+| Event | Display | Color |
+|-------|---------|-------|
+| You send a message | `COPY!` | Green |
+| Claude thinking | `o → oo → ooo` | Orange (animated) |
+| Claude reads a file | `READ` | Cyan |
+| Claude edits a file | `EDIT` | Yellow |
+| Claude runs a command | `BASH` | Red |
+| Permission needed | `ASK!` | Magenta |
+| Claude done | Robot face + `DONE` | Orange |
+
 **Rest mode** (after 15s idle): clock → Singapore weather → motivational quote, rotating every 11 seconds.
 
 ![Rest mode showing Singapore weather](docs/screen_weather.jpg)
