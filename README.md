@@ -2,7 +2,7 @@
 
 A tiny real-time status display for [Claude Code](https://claude.ai/code), built with an ESP32-C3 and a 1.8" TFT screen — held up by Clyde himself.
 
-![Claude Code external screen showing READ status](docs/screen_read.jpg)
+![AI External Screen for Claude Code](docs/cover.jpg)
 
 When Claude is working, the screen shows exactly what it's doing. When Claude is idle, it switches to a rest mode with a live clock, Singapore weather, and rotating quotes.
 
