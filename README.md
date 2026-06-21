@@ -70,15 +70,15 @@ When Claude is working, the screen shows exactly what it's doing. When Claude is
 
 ## Wiring
 
-| Screen Pin | ESP32-C3 GPIO | Wire Color |
-|-----------|---------------|------------|
-| VDD | 3.3V | Red |
-| GND | GND | Brown |
-| SCL (SCK) | GPIO 4 | Orange |
-| SDA (MOSI) | GPIO 6 | Yellow |
-| RES (RST) | GPIO 0 | Green |
-| DC | GPIO 1 | Blue |
-| CS | GPIO 7 | Purple |
+| Screen Pin | ESP32-C3 GPIO |
+|-----------|---------------|
+| VDD | 3.3V |
+| GND | GND |
+| SCL (SCK) | GPIO 4 |
+| SDA (MOSI) | GPIO 6 |
+| RES (RST) | GPIO 0 |
+| DC | GPIO 1 |
+| CS | GPIO 7 |
 
 > Note: Loose dupont wires cause white screen. Press firmly or solder for stable connection.
 
