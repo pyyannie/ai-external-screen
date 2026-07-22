@@ -2,3 +2,8 @@ wificonfig.json
 __pycache__/
 *.pyc
 .DS_Store
+
+# crab 2.0 运行时产物 & 旧分享包
+crab/venv/
+crab/bridge.log
+crab/Clawd External Display (Yi)/
