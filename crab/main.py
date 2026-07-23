@@ -114,7 +114,8 @@ def draw_frame(st, k):
         spi.write(ov[:n])
     cs.value(1)
 
-STATES = ('idle', 'thinking', 'typing', 'error', 'happy', 'sleeping', 'notification')
+STATES = ('idle', 'thinking', 'typing', 'error', 'happy', 'sleeping', 'notification',
+          'building', 'sweeping', 'juggling', 'groove')
 
 # 串口非阻塞读取
 poll = select.poll()
@@ -133,7 +134,8 @@ fill(0x1083)
 cur = 'idle'
 data = load_state(cur)
 last_input = time.ticks_ms()
-SLEEP_AFTER = 60000   # 60秒无状态→自动睡眠
+SLEEP_AFTER = 60000    # idle 真空闲 60秒→睡
+STUCK_AFTER = 180000   # 任何忙碌态卡满3分钟无更新→判定卡死(如API断线),兜底睡
 
 def run():
     global cur, data, last_input
@@ -158,8 +160,10 @@ def run():
             if d:
                 if data: data['f'].close()
                 data = d; fi = 0
-        # 只有真正空闲(idle)超过60秒才睡；thinking/typing/notification 等忙碌态永不睡
-        if cur == 'idle' and time.ticks_diff(time.ticks_ms(), last_input) > SLEEP_AFTER:
+        # idle 空闲60秒→睡；其他忙碌态卡满3分钟无更新→判定卡死(API断线等)兜底睡
+        idle_timeout = cur == 'idle' and time.ticks_diff(time.ticks_ms(), last_input) > SLEEP_AFTER
+        stuck_timeout = cur != 'sleeping' and time.ticks_diff(time.ticks_ms(), last_input) > STUCK_AFTER
+        if idle_timeout or stuck_timeout:
             cur = 'sleeping'; d = load_state(cur)
             if d:
                 if data: data['f'].close()

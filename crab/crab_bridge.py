@@ -6,7 +6,10 @@
 import os, glob, time, sys
 
 STATE_FILE = os.path.expanduser('~/.crab-state')
-VALID = {'idle', 'thinking', 'typing', 'error', 'happy', 'sleeping', 'notification'}
+PENDING_DIR = os.path.expanduser('~/.crab-pending')
+STALE_SEC = 600   # 登记文件超过10分钟视为残留(窗口崩溃没清)，忽略，防灯泡永久举着
+VALID = {'idle', 'thinking', 'typing', 'error', 'happy', 'sleeping', 'notification',
+         'building', 'sweeping', 'juggling', 'groove'}
 
 def find_port():
     c = (glob.glob('/dev/cu.usbmodem*') +
@@ -35,14 +38,41 @@ def read_state():
     except OSError:
         return None
 
+def any_pending():
+    """有任何未过期的授权登记 → 返回 True(该举灯泡)。顺手清理残留的旧登记。"""
+    try:
+        names = os.listdir(PENDING_DIR)
+    except OSError:
+        return False
+    now = time.time()
+    alive = False
+    for n in names:
+        p = os.path.join(PENDING_DIR, n)
+        try:
+            age = now - os.path.getmtime(p)
+        except OSError:
+            continue
+        if age > STALE_SEC:
+            try: os.remove(p)          # 残留登记(窗口崩了没清)，删掉
+            except OSError: pass
+        else:
+            alive = True
+    return alive
+
 def main():
     ser = open_port()
     if not ser:
         print('找不到串口，退出'); return
-    print('翻译官已启动，监视', STATE_FILE)
+    print('翻译官已启动，监视', STATE_FILE, '+', PENDING_DIR)
     last = None
     while True:
-        st = read_state()
+        # 授权优先：只要有窗口在等授权就举灯泡，全部处理完立刻回到正常状态
+        if any_pending():
+            st = 'notification'
+        else:
+            st = read_state()
+            if st == 'notification':
+                st = 'idle'   # 没人在等授权了，别再显示旧的灯泡状态
         if st and st != last and st in VALID:
             try:
                 ser.write((st + '\r\n').encode())
